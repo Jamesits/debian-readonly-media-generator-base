@@ -26,10 +26,14 @@ cr passwd -d root
 cr apt-get update -y
 
 # packages
-cr apt-get install -y --no-install-recommends acpi acpi-support-base acpi-fakekey cpufrequtils
+cr apt-get install -y --no-install-recommends $APT_OPTIONS acpi acpi-support-base acpi-fakekey cpufrequtils
 cr systemctl enable acpid
-cr apt-get install -y --no-install-recommends $ADD_PACKAGES
-cr apt-get install -y --no-install-recommends -t unstable wireguard
+cr apt-get install -y --no-install-recommends $APT_OPTIONS $ADD_PACKAGES
+cr apt-get install -y --no-install-recommends $APT_OPTIONS -t unstable $ADD_PACKAGES_UNSTABLE
+
+for item in "${SYSTEMD_DISABLE_UNITS[@]}"; do
+	cr systemctl disable "$item"
+done
 
 # FRRouting
 cr sed -i "s/=no/=yes/g" /etc/frr/daemons
