@@ -38,9 +38,6 @@ for item in "${SYSTEMD_DISABLE_UNITS[@]}"; do
 	cr systemctl disable "$item"
 done
 
-# FRRouting
-cr sed -i "s/=no/=yes/g" /etc/frr/daemons
-
 # install kernel modules but remove the kernel
 cr apt-get install -y --no-install-recommends linux-image-amd64
 rm -rf "$ROOT"/debinst/boot/* "$ROOT"/debinst/vmlinuz{,.old} "$ROOT"/debinst/initrd.img{,.old}
