@@ -30,14 +30,6 @@ cr apt-get install -y --no-install-recommends $APT_OPTIONS acpi acpi-support-bas
 cr apt-get install -y $APT_OPTIONS $ADD_PACKAGES
 cr apt-get install -y $APT_OPTIONS -t unstable $ADD_PACKAGES_UNSTABLE
 
-for item in "${SYSTEMD_ENABLE_UNITS[@]}"; do
-	cr systemctl enable "$item"
-done
-
-for item in "${SYSTEMD_DISABLE_UNITS[@]}"; do
-	cr systemctl disable "$item"
-done
-
 # install kernel modules but remove the kernel
 cr apt-get install -y --no-install-recommends linux-image-amd64
 rm -rf "$ROOT"/debinst/boot/* "$ROOT"/debinst/vmlinuz{,.old} "$ROOT"/debinst/initrd.img{,.old}

@@ -1,0 +1,9 @@
+enable acpid.service
+disable bird.service
+disable frr.service
+disable ssh.service
+disable shadowsocks-libev.service
+disable snmpd.service
+disable strongswan.service
+disable strongswan-swanctl.service
+
