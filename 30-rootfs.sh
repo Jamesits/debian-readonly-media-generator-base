@@ -42,7 +42,12 @@ cr apt-get clean -y
 cr apt-get autoremove -y
 rm -rf "$ROOT"/debinst/var/lib/apt/lists/*
 
-# remove uuid
+# remove machind id to make sure a different one is generated for every instance
+# note: this will trigger systemd's unpopulated /etc code which resets the enable/disable status of all units
+# so if you want to manually enable/disable a unit, you must use systemd.preset
+# See:
+# https://www.humblec.com/running_with_unpopulated_etc/
+# http://0pointer.net/blog/projects/stateless.html
 rm -f "$ROOT"/debinst/etc/machine-id
 
 # pack rootfs
