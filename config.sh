@@ -11,8 +11,8 @@ KERNEL_ARGS_NORM="panic=5"
 KERNEL_ARGS_PERSISTENT="persistence persistence-label=userdata persistence-storage=filesystem"
 KERNEL_ARGS_NOPERSISTENT="nopersistence"
 GRUB_MODULES="biosdisk disk part_gpt fat file configfile search search_fs_file echo ls reboot usb_keyboard at_keyboard minicmd"
-ADD_PACKAGES="sudo curl gnupg2 frr vim mtr-tiny tcpdump bmon htop ssh telnet netcat socat nmap zmap hping3 arping arp-scan dnsutils traceroute ndisc6 sipcalc charon-systemd libcharon-extra-plugins libstrongswan-extra-plugins tshark openvpn qemu-guest-agent open-vm-tools iptables-persistent"
+ADD_PACKAGES="sudo curl gnupg2 frr vim mtr-tiny tcpdump bmon htop ssh telnet netcat socat nmap zmap hping3 arping arp-scan dnsutils traceroute ndisc6 sipcalc charon-systemd libcharon-extra-plugins libstrongswan-extra-plugins tshark openvpn qemu-guest-agent open-vm-tools iptables-persistent shadowsocks-libev snmpd"
 ADD_PACKAGES_UNSTABLE="wireguard bird2"
 APT_OPTIONS="-o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
 declare -a SYSTEMD_ENABLE_UNITS=("acpid.service")
-declare -a SYSTEMD_DISABLE_UNITS=("bird.service" "frr.service" "ssh.service")
+declare -a SYSTEMD_DISABLE_UNITS=("bird.service" "frr.service" "ssh.service" "shadowsocks-libev.service" "snmpd.service")
