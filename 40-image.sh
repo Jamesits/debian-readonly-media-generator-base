@@ -17,8 +17,10 @@ sgdisk --clear --mbrtogpt /dev/loop0
 sgdisk --new 1:2048:4095 --change-name 1:"GRUB" --typecode 1:ef02 /dev/loop0
 # 512M
 sgdisk --new 2:4096:1050623 --change-name 2:"EFI" --typecode 2:ef00 --attributes "2:set:2" /dev/loop0
-# 512M
-sgdisk --new 3:1050624:2097118 --change-name 3:"userdata" --typecode 3:8300 --attributes "3:set:3" /dev/loop0
+# whatever left
+USERDATA_START=$(sgdisk --first-aligned-in-largest /dev/loop0)
+USERDATA_END=$(sgdisk --end-of-largest /dev/loop0)
+sgdisk --new 3:$USERDATA_START:$USERDATA_END --change-name 3:"userdata" --typecode 3:8300 --attributes "3:set:3" /dev/loop0
 sgdisk --print /dev/loop0
 partprobe /dev/loop0
 sleep 1
