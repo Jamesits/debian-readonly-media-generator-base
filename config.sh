@@ -14,4 +14,4 @@ GRUB_MODULES="biosdisk disk part_gpt fat file configfile search search_fs_file e
 ADD_PACKAGES="frr vim mtr-tiny tcpdump bmon htop ssh telnet netcat socat nmap zmap hping3 arping arp-scan dnsutils traceroute ndisc6 sipcalc charon-systemd libcharon-extra-plugins libstrongswan-extra-plugins tshark"
 ADD_PACKAGES_UNSTABLE="wireguard bird2"
 APT_OPTIONS="-o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
-declare -a SYSTEMD_DISABLE_UNITS=("bird.service")
+declare -a SYSTEMD_DISABLE_UNITS=("bird.service" "frr.service")
