@@ -42,6 +42,8 @@ cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/system/rootfs.squashfs
 # initialize persistent data
 mkdir -p "$ROOT"/userdata
 mkfs.ext4 "$LOOPDEV"p3
+# the partition is identified with ext4 label
+e2label "$LOOPDEV"p3 userdata
 mount -t ext4 "$LOOPDEV"p3 "$ROOT"/userdata
 cp -arx userdata/* "$ROOT"/userdata
 umount "$ROOT"/userdata
