@@ -27,9 +27,12 @@ cr apt-get update -y
 
 # packages
 cr apt-get install -y --no-install-recommends $APT_OPTIONS acpi acpi-support-base acpi-fakekey cpufrequtils
-cr systemctl enable acpid
-cr apt-get install -y --no-install-recommends $APT_OPTIONS $ADD_PACKAGES
-cr apt-get install -y --no-install-recommends $APT_OPTIONS -t unstable $ADD_PACKAGES_UNSTABLE
+cr apt-get install -y $APT_OPTIONS $ADD_PACKAGES
+cr apt-get install -y $APT_OPTIONS -t unstable $ADD_PACKAGES_UNSTABLE
+
+for item in "${SYSTEMD_ENABLE_UNITS[@]}"; do
+	cr systemctl enable "$item"
+done
 
 for item in "${SYSTEMD_DISABLE_UNITS[@]}"; do
 	cr systemctl disable "$item"
