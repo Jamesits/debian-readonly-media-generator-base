@@ -7,27 +7,29 @@ source ./config.sh
 rm -f "$ROOT/$IMAGE"
 fallocate -l 1G "$ROOT/$IMAGE"
 
-losetup /dev/loop0 "$ROOT/$IMAGE"
+LOOPDEV=$(losetup -f)
+echo "Setting up $LOOPDEV"
+losetup "$LOOPDEV" "$ROOT/$IMAGE"
 udevadm settle
 sleep 1
 
-sgdisk --zap-all /dev/loop0
-sgdisk --clear --mbrtogpt /dev/loop0
+sgdisk --zap-all "$LOOPDEV"
+sgdisk --clear --mbrtogpt "$LOOPDEV"
 # 1M
-sgdisk --new 1:2048:4095 --change-name 1:"GRUB" --typecode 1:ef02 /dev/loop0
+sgdisk --new 1:2048:4095 --change-name 1:"GRUB" --typecode 1:ef02 "$LOOPDEV"
 # 512M
-sgdisk --new 2:4096:1050623 --change-name 2:"EFI" --typecode 2:ef00 --attributes "2:set:2" /dev/loop0
+sgdisk --new 2:4096:1050623 --change-name 2:"EFI" --typecode 2:ef00 --attributes "2:set:2" "$LOOPDEV"
 # whatever left
-USERDATA_START=$(sgdisk --first-aligned-in-largest /dev/loop0)
-USERDATA_END=$(sgdisk --end-of-largest /dev/loop0)
-sgdisk --new 3:$USERDATA_START:$USERDATA_END --change-name 3:"userdata" --typecode 3:8300 --attributes "3:set:3" /dev/loop0
-sgdisk --print /dev/loop0
-partprobe /dev/loop0
+USERDATA_START=$(sgdisk --first-aligned-in-largest "$LOOPDEV")
+USERDATA_END=$(sgdisk --end-of-largest "$LOOPDEV")
+sgdisk --new 3:$USERDATA_START:$USERDATA_END --change-name 3:"userdata" --typecode 3:8300 --attributes "3:set:3" "$LOOPDEV"
+sgdisk --print "$LOOPDEV"
+partprobe "$LOOPDEV"
 sleep 1
 
 mkdir -p "$ROOT"/bootpart
-mkfs.fat -F 32 -h 4096 -n "EFI" /dev/loop0p2
-mount -t vfat /dev/loop0p2 "$ROOT"/bootpart
+mkfs.fat -F 32 -h 4096 -n "EFI" "$LOOPDEV"p2
+mount -t vfat "$LOOPDEV"p2 "$ROOT"/bootpart
 
 # install kernel & initramfs
 mkdir -p "$ROOT"/bootpart/boot
@@ -39,21 +41,21 @@ cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/system/rootfs.squashfs
 
 # initialize persistent data
 mkdir -p "$ROOT"/userdata
-mkfs.ext4 /dev/loop0p3
-mount -t ext4 /dev/loop0p3 "$ROOT"/userdata
+mkfs.ext4 "$LOOPDEV"p3
+mount -t ext4 "$LOOPDEV"p3 "$ROOT"/userdata
 cp -arx userdata/* "$ROOT"/userdata
 umount "$ROOT"/userdata
 
 # install GRUB2 CSM
 # The plain old method that is device-specific doesn't work on every device:
-#grub-install --force --skip-fs-probe --target=i386-pc --boot-directory="$ROOT"/bootpart/boot /dev/loop0
+#grub-install --force --skip-fs-probe --target=i386-pc --boot-directory="$ROOT"/bootpart/boot "$LOOPDEV"
 # Override core.img to insert gpt modules:
 # http://www.dolda2000.com/~fredrik/doc/grub2
 cp -r /usr/lib/grub "$ROOT"/grub
 grub-mkimage -O i386-pc -o "$ROOT"/grub/i386-pc/core.img -c grub/earlyconfig.cfg $GRUB_MODULES
 # we cannot install grub-pc on Ubuntu 16.04 because of a dependency hell so a symlink is missing
 # we have to use the original absolute path
-/usr/lib/grub/i386-pc/grub-bios-setup --force --skip-fs-probe --directory="$ROOT"/grub/i386-pc /dev/loop0
+/usr/lib/grub/i386-pc/grub-bios-setup --force --skip-fs-probe --directory="$ROOT"/grub/i386-pc "$LOOPDEV"
 
 # install GRUB2 UEFI
 grub-install --force --skip-fs-probe --target=x86_64-efi --boot-directory="$ROOT"/bootpart/boot --efi-directory="$ROOT"/bootpart --bootloader-id=GRUB --uefi-secure-boot --removable --no-nvram
@@ -233,6 +235,6 @@ popd
 
 # clean up
 umount "$ROOT"/bootpart
-losetup -d /dev/loop0
+losetup -d "$LOOPDEV"
 
 ls -alh "$ROOT"/"$IMAGE"
