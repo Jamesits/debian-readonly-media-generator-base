@@ -17,6 +17,8 @@ sgdisk --clear --mbrtogpt /dev/loop0
 sgdisk --new 1:2048:4095 --change-name 1:"GRUB" --typecode 1:ef02 /dev/loop0
 # 512M
 sgdisk --new 2:4096:1050623 --change-name 2:"EFI" --typecode 2:ef00 --attributes "2:set:2" /dev/loop0
+# 512M
+sgdisk --new 3:1050624:2097118 --change-name 3:"userdata" --typecode 3:8300 --attributes "3:set:3" /dev/loop0
 sgdisk --print /dev/loop0
 partprobe /dev/loop0
 sleep 1
@@ -32,6 +34,13 @@ cp -v "$ROOT"/boot/{vmlinuz,initrd.img}* "$ROOT"/bootpart/boot
 # install rootfs
 mkdir -p "$ROOT"/bootpart/system
 cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/system/rootfs.squashfs
+
+# initialize persistent data
+mkdir -p "$ROOT"/userdata
+mkfs.ext4 /dev/loop0p3
+mount -t ext4 /dev/loop0p3 "$ROOT"/userdata
+cp -arx userdata/* "$ROOT"/userdata
+umount "$ROOT"/userdata
 
 # install GRUB2 CSM
 # The plain old method that is device-specific doesn't work on every device:
@@ -120,6 +129,20 @@ insmod gzio
 insmod xzio
 insmod lzopio
 
+menuentry "Debian (R/W)" {
+    savedefault
+
+    search --no-floppy --file --set=root /boot/grub/grub.cfg
+    set gfxpayload=keep
+    
+    echo 'Loading Linux...'
+    linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM $KERNEL_ARGS_PERSISTENT
+    echo 'Loading initramfs...'
+    initrd /boot/$INITRD_FILENAME
+    
+    boot
+}
+
 menuentry "Debian" {
     savedefault
 
@@ -127,7 +150,7 @@ menuentry "Debian" {
     set gfxpayload=keep
     
     echo 'Loading Linux...'
-    linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM
+    linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM $KERNEL_ARGS_NOPERSISTENT
     echo 'Loading initramfs...'
     initrd /boot/$INITRD_FILENAME
     
@@ -141,7 +164,7 @@ menuentry "Debian (load to system memory)" {
     set gfxpayload=keep
     
     echo 'Loading Linux...'
-    linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE toram $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM
+    linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE toram $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM $KERNEL_ARGS_NOPERSISTENT
     echo 'Loading initramfs...'
     initrd /boot/$INITRD_FILENAME
     
@@ -153,7 +176,7 @@ menuentry "Debian (single user mode)" {
     set gfxpayload=keep
     
     echo 'Loading Linux...'
-    linux /boot/$KERNEL_FILENAME single $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC
+    linux /boot/$KERNEL_FILENAME single $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NOPERSISTENT
     echo 'Loading initramfs...'
     initrd /boot/$INITRD_FILENAME
     
