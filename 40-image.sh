@@ -4,6 +4,9 @@ set -x
 
 ROOT=build
 IMAGE=debian.img
+KERNEL_ARGS_FAST="noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier mds=off tsx=on tsx_async_abort=off mitigations=off"
+KERNEL_ARGS_LIVE="boot=live"
+KERNEL_ARGS_MISC="console=ttyS0 console=tty1"
 
 rm -f "$ROOT/$IMAGE"
 fallocate -l 1G "$ROOT/$IMAGE"
@@ -36,19 +39,51 @@ cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/live/rootfs.squashfs
 
 # install grub
 grub-install /dev/loop0 --skip-fs-probe --boot-directory="$ROOT"/bootpart/boot
-
+KERNEL_FILENAME=$(basename `ls "$ROOT"/boot/vmlinuz-* | head -n 1 `)
+INITRD_FILENAME=$(basename `ls "$ROOT"/boot/initrd.img* | head -n 1 `)
+echo "kernel: $KERNEL_FILENAME"
+echo "initrd: $INITRD_FILENAME"
 cat > "$ROOT"/bootpart/boot/grub/grub.cfg <<EOF
+default=0
+timeout=5
+serial --unit=0 --speed=9600 --word=8 --parity=no --stop=1
+terminal_input console serial
+terminal_output console serial
+fallback="1"
+
+insmod part_gpt
+insmod part_msdos
+
 menuentry "Debian" {
-    # load_video
     insmod gzio
-    insmod part_msdos
+    
     set root=(hd0,2)
     set gfxpayload=keep
+    
     echo 'Loading Linux...'
-    linux /boot/vmlinuz-4.19.0-6-amd64 noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier mds=off tsx=on tsx_async_abort=off mitigations=off boot=live console=ttyS0
+    linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC
     echo 'Loading initramfs...'
-    initrd /boot/initrd.img-4.19.0-6-amd64
+    initrd /boot/$INITRD_FILENAME
+    
     boot
+}
+
+submenu 'Advanced boot' --unrestricted {
+    menuentry 'Boot from next partition' {
+        chainloader +1
+    }
+
+    menuentry 'UEFI firmware setup' {
+        fwsetup
+    }
+
+    menuentry 'Reboot' {
+        reboot
+    }
+
+    menuentry 'Poweroff' {
+        halt
+    }
 }
 EOF
 
