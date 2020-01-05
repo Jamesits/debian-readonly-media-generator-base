@@ -1,5 +1,5 @@
 
-name: $(BUILD_SCRIPT_BRANCH)-$(BUILD_TYPE)-$(Date:yyyyMMdd).$(Rev:r)
+name: $(Date:yyyyMMdd).$(Rev:r)
 
 trigger:
   batch: true
