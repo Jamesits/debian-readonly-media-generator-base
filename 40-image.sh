@@ -5,8 +5,8 @@ set -x
 ROOT=build
 IMAGE=debian.img
 KERNEL_ARGS_FAST="noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier mds=off tsx=on tsx_async_abort=off mitigations=off"
-KERNEL_ARGS_LIVE="boot=live"
-KERNEL_ARGS_MISC="console=ttyS0 console=tty1"
+KERNEL_ARGS_LIVE="boot=live forcefsck ignore_uuid live-media-path=/system nopersistence swap=true noeject" # verify-checksums
+KERNEL_ARGS_MISC="console=ttyS0,9600 console=tty1 panic=5"
 GRUB_MODULES="nativedisk biosdisk disk part_msdos part_gpt fat file ehci uhci usb linux normal configfile test search search_fs_uuid search_fs_file true iso9660 search_label gfxterm gfxmenu gfxterm_menu cat echo ls memdisk tar ata pata scsi serial ahci acpi all_video lspci lvm pci reboot video"
 
 rm -f "$ROOT/$IMAGE"
@@ -35,8 +35,8 @@ mkdir -p "$ROOT"/bootpart/boot
 cp -v "$ROOT"/boot/{vmlinuz,initrd.img}* "$ROOT"/bootpart/boot
 
 # install rootfs
-mkdir -p "$ROOT"/bootpart/live
-cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/live/rootfs.squashfs
+mkdir -p "$ROOT"/bootpart/system
+cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/system/rootfs.squashfs
 
 # install GRUB2 CSM
 # The plain old method that is device-specific doesn't work on every device:
