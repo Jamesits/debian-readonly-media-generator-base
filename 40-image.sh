@@ -42,10 +42,11 @@ cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/live/rootfs.squashfs
 #grub-install --force --skip-fs-probe --target=i386-pc --boot-directory="$ROOT"/bootpart/boot /dev/loop0
 # Override core.img to insert gpt modules:
 # http://www.dolda2000.com/~fredrik/doc/grub2
-grub-mkimage -O i386-pc -o "$ROOT"/core.img -p '(hd0,gpt2)/boot/grub' nativedisk part_gpt part_msdos fat
+cp -r /usr/lib/grub "$ROOT"/grub
+grub-mkimage -O i386-pc -o "$ROOT"/grub/i386-pc/core.img -p '(hd0,gpt2)/boot/grub' disk ehci nativedisk part_gpt fat file usb
 # we cannot install grub-pc on Ubuntu 16.04 because of a dependency hell so a symlink is missing
 # we have to use the original absolute path
-/usr/lib/grub/i386-pc/grub-bios-setup --force --skip-fs-probe --directory=/usr/lib/grub/i386-pc --core-image=$(realpath "$ROOT"/core.img) /dev/loop0
+/usr/lib/grub/i386-pc/grub-bios-setup --force --skip-fs-probe --directory="$ROOT"/grub/i386-pc /dev/loop0
 
 # install GRUB2 UEFI
 grub-install --force --skip-fs-probe --target=x86_64-efi --boot-directory="$ROOT"/bootpart/boot --efi-directory="$ROOT"/bootpart --bootloader-id=GRUB --uefi-secure-boot --removable --no-nvram
