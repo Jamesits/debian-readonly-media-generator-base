@@ -38,10 +38,10 @@ mkdir -p "$ROOT"/bootpart/live
 cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/live/rootfs.squashfs
 
 # install GRUB2 CSM
-grub-install /dev/loop0 --skip-fs-probe --boot-directory="$ROOT"/bootpart/boot
+grub-install /dev/loop0 --skip-fs-probe --target=i386-pc --boot-directory="$ROOT"/bootpart/boot
 
 # install GRUB2 UEFI
-grub-install --skip-fs-probe --target=x86_64-efi --efi-directory="$ROOT"/bootpart/boot --bootloader-id=GRUB
+grub-install --skip-fs-probe --target=x86_64-efi --efi-directory="$ROOT"/bootpart/boot --bootloader-id=GRUB --uefi-secure-boot
 
 # populate GRUB2 config
 KERNEL_FILENAME=$(basename `ls "$ROOT"/boot/vmlinuz-* | head -n 1 `)
