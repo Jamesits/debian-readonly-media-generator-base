@@ -37,8 +37,13 @@ cp "$ROOT"/boot/* "$ROOT"/bootpart/boot
 mkdir -p "$ROOT"/bootpart/live
 cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/live/rootfs.squashfs
 
-# install grub
+# install GRUB2 CSM
 grub-install /dev/loop0 --skip-fs-probe --boot-directory="$ROOT"/bootpart/boot
+
+# install GRUB2 UEFI
+grub-install --skip-fs-probe --target=x86_64-efi --efi-directory="$ROOT"/bootpart/boot --bootloader-id=GRUB
+
+# populate GRUB2 config
 KERNEL_FILENAME=$(basename `ls "$ROOT"/boot/vmlinuz-* | head -n 1 `)
 INITRD_FILENAME=$(basename `ls "$ROOT"/boot/initrd.img* | head -n 1 `)
 echo "kernel: $KERNEL_FILENAME"
