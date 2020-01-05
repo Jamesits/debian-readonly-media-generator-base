@@ -2,4 +2,5 @@
 set -Eeuo pipefail
 set -x
 
-mkdir -p build/
+rm -rf --one-file-system build
+mkdir -p build
