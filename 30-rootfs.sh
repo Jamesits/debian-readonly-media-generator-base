@@ -17,10 +17,11 @@ cp -rv rootfs_overrides/* "$ROOT"/debinst/
 
 # fix things
 chroot "$ROOT"/debinst passwd -d root
+chroot "$ROOT"/debinst apt-get install -y acpid
 
 # remove apt cache
-chroot "$ROOT"/debinst apt-get clean
-chroot "$ROOT"/debinst apt-get autoremove
+chroot "$ROOT"/debinst apt-get clean -y
+chroot "$ROOT"/debinst apt-get autoremove -y
 rm -rf "$ROOT"/debinst/var/lib/apt/lists/*
 
 # pack rootfs

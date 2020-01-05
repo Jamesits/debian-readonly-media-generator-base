@@ -7,6 +7,7 @@ IMAGE=debian.img
 KERNEL_ARGS_FAST="noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier mds=off tsx=on tsx_async_abort=off mitigations=off"
 KERNEL_ARGS_LIVE="boot=live"
 KERNEL_ARGS_MISC="console=ttyS0 console=tty1"
+GRUB_MODULES="nativedisk biosdisk disk part_msdos part_gpt fat file ehci uhci usb linux normal configfile test search search_fs_uuid search_fs_file true iso9660 search_label gfxterm gfxmenu gfxterm_menu cat echo ls memdisk tar ata pata scsi serial ahci acpi all_video lspci lvm pci reboot video"
 
 rm -f "$ROOT/$IMAGE"
 fallocate -l 1G "$ROOT/$IMAGE"
@@ -43,7 +44,7 @@ cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/live/rootfs.squashfs
 # Override core.img to insert gpt modules:
 # http://www.dolda2000.com/~fredrik/doc/grub2
 cp -r /usr/lib/grub "$ROOT"/grub
-grub-mkimage -O i386-pc -o "$ROOT"/grub/i386-pc/core.img -c grub/earlyconfig.cfg nativedisk biosdisk disk part_msdos part_gpt fat file ehci uhci usb linux normal configfile test search search_fs_uuid search_fs_file true iso9660 search_label gfxterm gfxmenu gfxterm_menu cat echo ls memdisk tar ata pata scsi serial ahci
+grub-mkimage -O i386-pc -o "$ROOT"/grub/i386-pc/core.img -c grub/earlyconfig.cfg $GRUB_MODULES
 # we cannot install grub-pc on Ubuntu 16.04 because of a dependency hell so a symlink is missing
 # we have to use the original absolute path
 /usr/lib/grub/i386-pc/grub-bios-setup --force --skip-fs-probe --directory="$ROOT"/grub/i386-pc /dev/loop0
@@ -58,7 +59,7 @@ echo "kernel: $KERNEL_FILENAME"
 echo "initrd: $INITRD_FILENAME"
 cat > "$ROOT"/bootpart/boot/grub/grub.cfg <<EOF
 default=0
-timeout=5
+timeout=3
 serial --unit=0 --speed=9600 --word=8 --parity=no --stop=1
 terminal_input console serial
 terminal_output console serial
