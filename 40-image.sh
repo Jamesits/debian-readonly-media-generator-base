@@ -45,7 +45,7 @@ grub-install --force --skip-fs-probe --target=i386-pc --boot-directory="$ROOT"/b
 grub-mkimage -O i386-pc -o "$ROOT"/core.img -p '(hd0,gpt2)/boot/grub' nativedisk part_gpt part_msdos fat
 # we cannot install grub-pc on Ubuntu 16.04 because of a dependency hell so a symlink is missing
 # we have to use the original absolute path
-/usr/lib/grub/i386-pc/grub-bios-setup --force --skip-fs-probe --directory=/usr/lib/grub/i386-pc --core-image="$ROOT"/core.img /dev/loop0p1
+/usr/lib/grub/i386-pc/grub-bios-setup --force --skip-fs-probe --directory=/usr/lib/grub/i386-pc --core-image=$(realpath "$ROOT"/core.img) /dev/loop0p1
 
 # install GRUB2 UEFI
 grub-install --force --skip-fs-probe --target=x86_64-efi --boot-directory="$ROOT"/bootpart/boot --efi-directory="$ROOT"/bootpart --bootloader-id=GRUB --uefi-secure-boot --removable --no-nvram
