@@ -2,6 +2,10 @@
 set -Eeuo pipefail
 set -x
 
-tar -cvzf "$ROOT/$IMAGE".tar.gz "$ROOT/$IMAGE"
+ROOT=build
+IMAGE=debian.img
 
-ls -alh "$ROOT/$IMAGE".tar.gz
+cd "$ROOT"
+tar -cvzf "$IMAGE".tar.gz "$IMAGE"
+
+ls -alh 

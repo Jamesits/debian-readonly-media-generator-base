@@ -3,7 +3,7 @@ set -Eeuo pipefail
 set -x
 
 ROOT=build
-mkdir "$ROOT"/debinst
+mkdir -p "$ROOT"/debinst
 debootstrap --arch amd64 stretch "$ROOT"/debinst http://ftp.us.debian.org/debian
-mksquashfs -comp xz "$ROOT"/debinst "$ROOT"/rootfs.squashfs
+mksquashfs "$ROOT"/debinst "$ROOT"/rootfs.squashfs -comp xz
 ls -alh "$ROOT"/rootfs.squashfs
