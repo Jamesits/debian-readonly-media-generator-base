@@ -41,7 +41,7 @@ cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/live/rootfs.squashfs
 grub-install --skip-fs-probe --compress=lzo --target=i386-pc --boot-directory="$ROOT"/bootpart/boot /dev/loop0
 
 # install GRUB2 UEFI
-grub-install --skip-fs-probe --compress=lzo --target=x86_64-efi --efi-directory="$ROOT"/bootpart/boot --bootloader-id=GRUB --uefi-secure-boot --removable --no-nvram
+grub-install --skip-fs-probe --compress=lzo --target=x86_64-efi --boot-directory="$ROOT"/bootpart/boot --efi-directory="$ROOT"/bootpart --bootloader-id=GRUB --uefi-secure-boot --removable --no-nvram
 
 # populate GRUB2 config
 KERNEL_FILENAME=$(basename `ls "$ROOT"/boot/vmlinuz-* | head -n 1 `)
