@@ -100,6 +100,12 @@ submenu 'Advanced boot' --unrestricted {
 }
 EOF
 
+cat > "$ROOT"/bootpart/EFI/BOOT/grub.cfg <<EOF
+search --no-floppy --file --set=root /boot/grub/grub.cfg
+set prefix=($root)'/boot/grub'
+configfile $prefix/grub.cfg
+EOF
+
 umount "$ROOT"/bootpart
 losetup -d /dev/loop0
 
