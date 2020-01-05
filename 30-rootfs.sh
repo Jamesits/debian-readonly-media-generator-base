@@ -18,7 +18,7 @@ cp -rv rootfs_overrides/* "$ROOT"/debinst/
 # fix things
 chroot "$ROOT"/debinst passwd -d root
 chroot "$ROOT"/debinst apt-get update -y
-chroot "$ROOT"/debinst apt-get install -y acpid
+chroot "$ROOT"/debinst apt-get install -y acpid ca-certificates
 
 # remove apt cache
 chroot "$ROOT"/debinst apt-get clean -y
