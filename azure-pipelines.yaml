@@ -18,6 +18,9 @@ jobs:
     timeoutInMinutes: 120
 
     steps:
+    - bash: 'ls /usr/lib/grub/i386-pc/'
+      displayName: 'test'
+
     - bash: 'sudo -E ./00-install-deps.sh'
       displayName: '00-install-deps'
 
