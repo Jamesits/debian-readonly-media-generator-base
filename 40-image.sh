@@ -45,9 +45,11 @@ grub-install --force --skip-fs-probe --target=i386-pc --boot-directory="$ROOT"/b
 grub-mkimage -O i386-pc -o "$ROOT"/core.img -p '(hd0,gpt2)/boot/grub' native part_gpt part_msdos fat
 grub-bios-setup --force --skip-fs-probe --core-image "$ROOT"/core.img /dev/loop0p1
 
-
 # install GRUB2 UEFI
 grub-install --force --skip-fs-probe --target=x86_64-efi --boot-directory="$ROOT"/bootpart/boot --efi-directory="$ROOT"/bootpart --bootloader-id=GRUB --uefi-secure-boot --removable --no-nvram
+
+# also copy core.img to rootfs
+cp "$ROOT"/core.img "$ROOT"/bootpart/boot/grub/i386-pc/core.img
 
 # populate GRUB2 config
 KERNEL_FILENAME=$(basename `ls "$ROOT"/boot/vmlinuz-* | head -n 1 `)
