@@ -42,7 +42,7 @@ cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/live/rootfs.squashfs
 grub-install --force --skip-fs-probe --target=i386-pc --boot-directory="$ROOT"/bootpart/boot /dev/loop0
 # Override core.img to insert gpt modules:
 # http://www.dolda2000.com/~fredrik/doc/grub2
-grub-mkimage -O i386-pc -o "$ROOT"/core.img -p '(hd0,gpt2)/boot/grub' native part_gpt part_msdos fat
+grub-mkimage -O i386-pc -o "$ROOT"/core.img -p '(hd0,gpt2)/boot/grub' nativedisk part_gpt part_msdos fat
 grub-bios-setup --force --skip-fs-probe --core-image "$ROOT"/core.img /dev/loop0p1
 
 # install GRUB2 UEFI
