@@ -38,7 +38,13 @@ mkdir -p "$ROOT"/bootpart/live
 cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/live/rootfs.squashfs
 
 # install GRUB2 CSM
+# The plain old method that is device-specific doesn't work on every device:
 grub-install --force --skip-fs-probe --compress=lzo --target=i386-pc --boot-directory="$ROOT"/bootpart/boot /dev/loop0
+# Override core.img to insert gpt modules:
+# http://www.dolda2000.com/~fredrik/doc/grub2
+grub-mkimage -O i386-pc -o "$ROOT"/core.img -p '(hd0,gpt2)/boot/grub' native part_gpt part_msdos fat
+grub-bios-setup --force --skip-fs-probe --core-image "$ROOT"/core.img /dev/loop0p1
+
 
 # install GRUB2 UEFI
 grub-install --force --skip-fs-probe --compress=lzo --target=x86_64-efi --boot-directory="$ROOT"/bootpart/boot --efi-directory="$ROOT"/bootpart --bootloader-id=GRUB --uefi-secure-boot --removable --no-nvram
