@@ -31,17 +31,17 @@ mount -t vfat /dev/loop0p2 "$ROOT"/bootpart
 
 # install kernel & initramfs
 mkdir -p "$ROOT"/bootpart/boot
-cp "$ROOT"/boot/* "$ROOT"/bootpart/boot
+cp -v "$ROOT"/boot/{vmlinuz,initrd.img}* "$ROOT"/bootpart/boot
 
 # install rootfs
 mkdir -p "$ROOT"/bootpart/live
 cp "$ROOT"/rootfs.squashfs "$ROOT"/bootpart/live/rootfs.squashfs
 
 # install GRUB2 CSM
-grub-install /dev/loop0 --skip-fs-probe --target=i386-pc --boot-directory="$ROOT"/bootpart/boot
+grub-install --skip-fs-probe --compress=lzo --target=i386-pc --boot-directory="$ROOT"/bootpart/boot /dev/loop0
 
 # install GRUB2 UEFI
-grub-install --skip-fs-probe --target=x86_64-efi --efi-directory="$ROOT"/bootpart/boot --bootloader-id=GRUB --uefi-secure-boot
+grub-install --skip-fs-probe --compress=lzo --target=x86_64-efi --efi-directory="$ROOT"/bootpart/boot --bootloader-id=GRUB --uefi-secure-boot --removable --no-nvram
 
 # populate GRUB2 config
 KERNEL_FILENAME=$(basename `ls "$ROOT"/boot/vmlinuz-* | head -n 1 `)
