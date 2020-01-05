@@ -70,7 +70,7 @@ insmod part_msdos
 menuentry "Debian" {
     insmod gzio
     
-    set root=(hd0,2)
+    search --no-floppy --file --set=root /boot/grub/grub.cfg
     set gfxpayload=keep
     
     echo 'Loading Linux...'
