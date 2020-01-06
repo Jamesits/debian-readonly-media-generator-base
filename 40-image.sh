@@ -61,10 +61,24 @@ cat > "$ROOT"/bootpart/boot/grub/grub.cfg <<EOF
 timeout=3
 
 insmod serial
-
 serial --unit=0 --speed=9600 --word=8 --parity=no --stop=1
+
 terminal_input console serial
-terminal_output console serial
+
+insmod font
+font="/boot/grub/unicode.pf2"
+if loadfont \$font ; then
+  set gfxmode=auto
+  insmod all_video
+  insmod gfxterm
+  set locale_dir=\$prefix/locale
+  set lang=en_US
+  insmod gettext
+  terminal_output gfxterm serial
+else
+  terminal_output console serial
+fi
+
 fallback="1"
 
 insmod part_gpt
@@ -101,21 +115,6 @@ function savedefault {
   fi
 }
 
-insmod font
-
-font="/boot/grub/unicode.pf2"
-
-if loadfont \$font ; then
-  set gfxmode=auto
-  load_video
-  insmod gfxterm
-  set locale_dir=\$prefix/locale
-  set lang=en_US
-  insmod gettext
-fi
-terminal_output gfxterm
-
-insmod all_video
 insmod linux
 insmod gzio
 insmod xzio
