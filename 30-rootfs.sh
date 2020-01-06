@@ -28,6 +28,7 @@ cr apt-get update -y
 # packages
 cr apt-get install -y --no-install-recommends ca-certificates apt-transport-https
 cr apt-get install -y --no-install-recommends acpi acpi-support-base acpi-fakekey cpufrequtils
+cr systemctl enable acpid
 
 # install kernel modules but remove the kernel
 cr apt-get install -y --no-install-recommends linux-image-amd64
