@@ -103,7 +103,7 @@ function savedefault {
 
 insmod font
 
-font="/usr/share/grub/unicode.pf2"
+font="/boot/grub/unicode.pf2"
 
 if loadfont \$font ; then
   set gfxmode=auto
@@ -181,6 +181,8 @@ EOF
 cp grub/earlyconfig.cfg "$ROOT"/bootpart/EFI/BOOT/grub.cfg
 # workaround GRUB2 legacy modules missing
 cp -r /usr/lib/grub/i386-pc "$ROOT"/bootpart/boot/grub/i386-pc
+# Unicode font
+cp /usr/share/grub/unicode.pf2 "$ROOT"/bootpart/boot/grub/unicode.pf2
 
 # calculate checksums
 pushd "$ROOT"/bootpart
