@@ -7,7 +7,7 @@ IMAGE=debian.img
 KERNEL_ARGS_FAST="noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier mds=off tsx=on tsx_async_abort=off mitigations=off"
 KERNEL_ARGS_LIVE="boot=live forcefsck ignore_uuid live-media-path=/system nopersistence swap=true noeject" 
 KERNEL_ARGS_MISC="console=ttyS0,9600 console=tty1 panic=5"
-GRUB_MODULES="nativedisk biosdisk disk part_msdos part_gpt fat file ehci uhci usb configfile test search search_fs_uuid search_fs_file true iso9660 search_label echo ls ata pata scsi serial ahci acpi all_video pci reboot video"
+GRUB_MODULES="nativedisk biosdisk disk part_gpt fat file usb ehci uhci configfile search search_fs_uuid search_fs_file iso9660 search_label echo ls pci ata pata scsi ahci reboot"
 
 rm -f "$ROOT/$IMAGE"
 fallocate -l 1G "$ROOT/$IMAGE"
@@ -59,6 +59,9 @@ echo "kernel: $KERNEL_FILENAME"
 echo "initrd: $INITRD_FILENAME"
 cat > "$ROOT"/bootpart/boot/grub/grub.cfg <<EOF
 timeout=3
+
+insmod serial
+
 serial --unit=0 --speed=9600 --word=8 --parity=no --stop=1
 terminal_input console serial
 terminal_output console serial
@@ -67,6 +70,7 @@ fallback="1"
 insmod part_gpt
 insmod part_msdos
 insmod fat
+insmod acpi
 insmod loadenv
 
 if [ -s \$prefix/grubenv ]; then
