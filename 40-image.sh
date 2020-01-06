@@ -176,7 +176,7 @@ EOF
 
 cp grub/earlyconfig.cfg "$ROOT"/bootpart/EFI/BOOT/grub.cfg
 # workaround GRUB2 legacy modules missing
-cp -r /usr/lib/grub/i386-pc "$ROOT"/bootpart/grub/i386-pc
+cp -r /usr/lib/grub/i386-pc "$ROOT"/bootpart/boot/grub/i386-pc
 
 # calculate checksums
 pushd "$ROOT"/bootpart
