@@ -37,7 +37,7 @@ jobs:
       displayName: '50-pack'
 
     - bash: |
-            cp -r build/*.{tar.gz,squashfs,qcow2,vmdk,vhdx} build/boot ${BUILD_ARTIFACTSTAGINGDIRECTORY}
+            cp -r build/*.{tar.gz,squashfs,qcow2,vmdk,vhdx} build/boot build/packages.txt ${BUILD_ARTIFACTSTAGINGDIRECTORY}
       displayName: 'copy artifact'
 
     - task: PublishBuildArtifacts@1

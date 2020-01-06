@@ -29,6 +29,11 @@ cr apt-get update -y
 cr apt-get install -y --no-install-recommends ca-certificates apt-transport-https
 cr apt-get install -y --no-install-recommends acpi acpi-support-base acpi-fakekey cpufrequtils
 
+# install kernel modules but remove the kernel
+cr apt-get install -y --no-install-recommends linux-image-amd64
+rm -rf "$ROOT"/debinst/boot/*
+
+# generate a list of packages
 cr sh -c "dpkg --get-selections | grep -v deinstall" > "$ROOT"/packages.txt
 
 # remove apt cache
