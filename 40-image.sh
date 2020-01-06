@@ -60,10 +60,12 @@ echo "initrd: $INITRD_FILENAME"
 cat > "$ROOT"/bootpart/boot/grub/grub.cfg <<EOF
 timeout=3
 
+terminal_output --append console
 terminal_input --append console
 
 insmod serial
 serial --unit=0 --speed=9600 --word=8 --parity=no --stop=1
+terminal_output --append serial
 terminal_input --append serial
 
 insmod font
@@ -75,8 +77,8 @@ if loadfont \$font ; then
   set locale_dir=\$prefix/locale
   set lang=en_US
   insmod gettext
-  terminal_output --remove console
   terminal_output --append gfxterm
+  terminal_output --remove console
 else
   echo "Font load failed"
 fi
