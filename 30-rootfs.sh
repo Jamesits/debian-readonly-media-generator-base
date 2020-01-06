@@ -26,8 +26,8 @@ cr passwd -d root
 cr apt-get update -y
 
 # packages
-cr apt-get install -y ca-certificates
-cr apt-get install -y acpi acpi-support acpid cpufrequtils
+cr apt-get install -y --no-install-recommends ca-certificates apt-transport-https
+cr apt-get install -y --no-install-recommends acpi acpi-support acpid cpufrequtils
 
 cr sh -c "dpkg --get-selections | grep -v deinstall" > "$ROOT"/packages.txt
 
