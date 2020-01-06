@@ -86,6 +86,7 @@ insmod part_msdos
 insmod fat
 insmod acpi
 insmod loadenv
+insmod test
 
 if [ -s \$prefix/grubenv ]; then
   set have_grubenv=true
