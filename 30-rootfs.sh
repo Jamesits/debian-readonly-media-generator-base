@@ -15,14 +15,21 @@ debootstrap --arch amd64 buster "$ROOT"/debinst http://ftp.us.debian.org/debian
 chown -R root:root rootfs_overrides
 cp -rv rootfs_overrides/* "$ROOT"/debinst/
 
+function cr() {
+	chroot "$ROOT"/debinst "$@"
+}
+
 # fix things
-chroot "$ROOT"/debinst passwd -d root
-chroot "$ROOT"/debinst apt-get update -y
-chroot "$ROOT"/debinst apt-get install -y acpid ca-certificates
+cr passwd -d root
+cr apt-get update -y
+
+# packages
+cr apt-get install -y ca-certificates
+cr apt-get install -y acpi acpi-support acpid cpufrequtils
 
 # remove apt cache
-chroot "$ROOT"/debinst apt-get clean -y
-chroot "$ROOT"/debinst apt-get autoremove -y
+cr apt-get clean -y
+cr apt-get autoremove -y
 rm -rf "$ROOT"/debinst/var/lib/apt/lists/*
 
 # pack rootfs
