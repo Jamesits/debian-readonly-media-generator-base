@@ -60,10 +60,11 @@ echo "initrd: $INITRD_FILENAME"
 cat > "$ROOT"/bootpart/boot/grub/grub.cfg <<EOF
 timeout=3
 
+terminal_input --append console
+
 insmod serial
 serial --unit=0 --speed=9600 --word=8 --parity=no --stop=1
-
-terminal_input console serial
+terminal_input --append serial
 
 insmod font
 font="/boot/grub/unicode.pf2"
@@ -74,9 +75,10 @@ if loadfont \$font ; then
   set locale_dir=\$prefix/locale
   set lang=en_US
   insmod gettext
-  terminal_output gfxterm serial
+  terminal_output --remove console
+  terminal_output --append gfxterm
 else
-  terminal_output console serial
+  echo "Font load failed"
 fi
 
 fallback="1"
@@ -122,11 +124,27 @@ insmod xzio
 insmod lzopio
 
 menuentry "Debian" {
+    savedefault
+
     search --no-floppy --file --set=root /boot/grub/grub.cfg
     set gfxpayload=keep
     
     echo 'Loading Linux...'
     linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC
+    echo 'Loading initramfs...'
+    initrd /boot/$INITRD_FILENAME
+    
+    boot
+}
+
+menuentry "Debian (load to system memory)" {
+    savedefault
+
+    search --no-floppy --file --set=root /boot/grub/grub.cfg
+    set gfxpayload=keep
+    
+    echo 'Loading Linux...'
+    linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE toram $KERNEL_ARGS_MISC
     echo 'Loading initramfs...'
     initrd /boot/$INITRD_FILENAME
     
