@@ -42,5 +42,5 @@ cr apt-get autoremove -y
 rm -rf "$ROOT"/debinst/var/lib/apt/lists/*
 
 # pack rootfs
-mksquashfs "$ROOT"/debinst "$ROOT"/rootfs.squashfs -comp xz -Xbcj x86 -noappend
+mksquashfs "$ROOT"/debinst "$ROOT"/rootfs.squashfs -comp xz -noappend
 ls -alh "$ROOT"/rootfs.squashfs
