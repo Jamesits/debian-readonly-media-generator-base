@@ -103,6 +103,12 @@ EOF
 
 cp grub/earlyconfig.cfg "$ROOT"/bootpart/EFI/BOOT/grub.cfg
 
+# calculate checksums
+pushd "$ROOT"/bootpart
+rm -f md5sum.txt
+find . ! -name 'md5sum.txt' -exec md5sum {} \; 2>/dev/null | tee md5sum.txt
+
+# clean up
 umount "$ROOT"/bootpart
 losetup -d /dev/loop0
 

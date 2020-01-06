@@ -27,6 +27,8 @@ cr apt-get update -y
 cr apt-get install -y ca-certificates
 cr apt-get install -y acpi acpi-support acpid cpufrequtils
 
+cr sh -c "dpkg --get-selections | grep -v deinstall" > "$ROOT"/packages.txt
+
 # remove apt cache
 cr apt-get clean -y
 cr apt-get autoremove -y
