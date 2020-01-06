@@ -4,6 +4,8 @@ set -x
 
 ROOT=build
 export LANG=C.UTF-8
+export DEBIAN_FRONTEND=noninteractive
+
 rm -rf --one-file-system "$ROOT"/debinst
 rm -f "$ROOT"/rootfs.squashfs
 mkdir -p "$ROOT"/debinst

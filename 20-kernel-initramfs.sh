@@ -6,6 +6,7 @@ ROOT=build
 
 mkdir -p "$ROOT"/boot
 docker run --rm -i \
+	--env DEBIAN_FRONTEND=noninteractive \
 	-v $(realpath docker):/mnt/builder:ro \
 	-v $(realpath "$ROOT"/boot):/mnt/build \
 	-v $(realpath rootfs_overrides/etc/apt/sources.list):/etc/apt/sources.list:ro \
