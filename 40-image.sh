@@ -144,6 +144,22 @@ menuentry "Debian (single user mode)" {
     boot
 }
 
+menuentry "Verify file integrity" {
+    insmod gzio
+    insmod xzio
+    insmod lzopio
+    
+    search --no-floppy --file --set=root /boot/grub/grub.cfg
+    set gfxpayload=keep
+    
+    echo 'Loading Linux...'
+    linux /boot/$KERNEL_FILENAME verify-checksums $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC
+    echo 'Loading initramfs...'
+    initrd /boot/$INITRD_FILENAME
+    
+    boot
+}
+
 submenu 'Advanced boot' {
     menuentry 'Boot from next partition' {
         chainloader +1
