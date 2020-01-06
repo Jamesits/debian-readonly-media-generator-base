@@ -31,7 +31,7 @@ cr apt-get install -y --no-install-recommends acpi acpi-support-base acpi-fakeke
 
 # install kernel modules but remove the kernel
 cr apt-get install -y --no-install-recommends linux-image-amd64
-rm -rf "$ROOT"/debinst/boot/*
+rm -rf "$ROOT"/debinst/boot/* "$ROOT"/debinst/vmlinuz{,.old} "$ROOT"/debinst/initrd.img{,.old}
 
 # generate a list of packages
 cr sh -c "dpkg --get-selections | grep -v deinstall" > "$ROOT"/packages.txt
