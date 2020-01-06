@@ -67,6 +67,7 @@ fallback="1"
 insmod part_gpt
 insmod part_msdos
 insmod fat
+insmod loadenv
 
 if [ -s \$prefix/grubenv ]; then
   set have_grubenv=true
@@ -111,12 +112,12 @@ fi
 terminal_output gfxterm
 
 insmod all_video
+insmod linux
+insmod gzio
+insmod xzio
+insmod lzopio
 
 menuentry "Debian" {
-    insmod gzio
-    insmod xzio
-    insmod lzopio
-    
     search --no-floppy --file --set=root /boot/grub/grub.cfg
     set gfxpayload=keep
     
@@ -129,10 +130,6 @@ menuentry "Debian" {
 }
 
 menuentry "Debian (single user mode)" {
-    insmod gzio
-    insmod xzio
-    insmod lzopio
-    
     search --no-floppy --file --set=root /boot/grub/grub.cfg
     set gfxpayload=keep
     
@@ -145,10 +142,6 @@ menuentry "Debian (single user mode)" {
 }
 
 menuentry "Verify file integrity" {
-    insmod gzio
-    insmod xzio
-    insmod lzopio
-    
     search --no-floppy --file --set=root /boot/grub/grub.cfg
     set gfxpayload=keep
     
@@ -182,6 +175,8 @@ submenu 'Advanced boot' {
 EOF
 
 cp grub/earlyconfig.cfg "$ROOT"/bootpart/EFI/BOOT/grub.cfg
+# workaround GRUB2 legacy modules missing
+cp -r /usr/lib/grub/i386-pc "$ROOT"/bootpart/grub/i386-pc
 
 # calculate checksums
 pushd "$ROOT"/bootpart
