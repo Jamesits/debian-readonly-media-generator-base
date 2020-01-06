@@ -68,12 +68,12 @@ insmod part_gpt
 insmod part_msdos
 insmod fat
 
-if [ -s $prefix/grubenv ]; then
+if [ -s \$prefix/grubenv ]; then
   set have_grubenv=true
   load_env
 fi
-if [ "${next_entry}" ] ; then
-   set default="${next_entry}"
+if [ "\${next_entry}" ] ; then
+   set default="\${next_entry}"
    set next_entry=
    save_env next_entry
    set boot_once=true
@@ -81,8 +81,8 @@ else
    set default="0"
 fi
 
-if [ "${prev_saved_entry}" ]; then
-  set saved_entry="${prev_saved_entry}"
+if [ "\${prev_saved_entry}" ]; then
+  set saved_entry="\${prev_saved_entry}"
   save_env saved_entry
   set prev_saved_entry=
   save_env prev_saved_entry
@@ -90,8 +90,8 @@ if [ "${prev_saved_entry}" ]; then
 fi
 
 function savedefault {
-  if [ -z "${boot_once}" ]; then
-    saved_entry="${chosen}"
+  if [ -z "\${boot_once}" ]; then
+    saved_entry="\${chosen}"
     save_env saved_entry
   fi
 }
@@ -100,11 +100,11 @@ insmod font
 
 font="/usr/share/grub/unicode.pf2"
 
-if loadfont $font ; then
+if loadfont \$font ; then
   set gfxmode=auto
   load_video
   insmod gfxterm
-  set locale_dir=$prefix/locale
+  set locale_dir=\$prefix/locale
   set lang=en_US
   insmod gettext
 fi
