@@ -4,6 +4,10 @@ set -x
 
 source ./config.sh
 
+function cr() {
+	chroot "$ROOT"/debinst "$@"
+}
+
 rm -rf --one-file-system "$ROOT"/debinst
 rm -f "$ROOT"/rootfs.squashfs
 mkdir -p "$ROOT"/debinst
@@ -16,10 +20,6 @@ cr apt-get install -y --no-install-recommends ca-certificates apt-transport-http
 # apply overrides
 chown -R root:root rootfs_overrides
 cp -rv rootfs_overrides/* "$ROOT"/debinst/
-
-function cr() {
-	chroot "$ROOT"/debinst "$@"
-}
 
 # fix things
 cr passwd -d root
