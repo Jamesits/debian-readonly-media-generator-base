@@ -30,6 +30,9 @@ cr apt-get install -y --no-install-recommends acpi acpi-support-base acpi-fakeke
 cr systemctl enable acpid
 cr apt-get install -y --no-install-recommends $ADD_PACKAGES
 
+# FRRouting
+cr sed -ie "s/=no/=yes/g" /etc/frr/daemons
+
 # install kernel modules but remove the kernel
 cr apt-get install -y --no-install-recommends linux-image-amd64
 rm -rf "$ROOT"/debinst/boot/* "$ROOT"/debinst/vmlinuz{,.old} "$ROOT"/debinst/initrd.img{,.old}
