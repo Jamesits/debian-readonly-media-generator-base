@@ -10,6 +10,8 @@ mkdir -p "$ROOT"/debinst
 
 # install a minimal OS
 debootstrap --arch amd64 buster "$ROOT"/debinst http://ftp.us.debian.org/debian
+# install ca-certificates ASAP because as long as you have HTTPS transport in apt config overrides, the following apt-get update is going to fail
+cr apt-get install -y --no-install-recommends ca-certificates apt-transport-https
 
 # apply overrides
 chown -R root:root rootfs_overrides
@@ -24,7 +26,6 @@ cr passwd -d root
 cr apt-get update -y
 
 # packages
-cr apt-get install -y --no-install-recommends ca-certificates apt-transport-https
 cr apt-get install -y --no-install-recommends acpi acpi-support-base acpi-fakekey cpufrequtils
 cr systemctl enable acpid
 cr apt-get install -y --no-install-recommends $ADD_PACKAGES
