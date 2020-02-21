@@ -9,4 +9,4 @@ KERNEL_ARGS_LIVE="boot=live forcefsck ignore_uuid live-media-path=/system nopers
 KERNEL_ARGS_MISC="console=ttyS0,9600 console=tty1 lockdown"
 KERNEL_ARGS_NORM="panic=5"
 GRUB_MODULES="biosdisk disk part_gpt fat file configfile search search_fs_file echo ls reboot usb_keyboard at_keyboard minicmd"
-
+ADD_PACKAGES="frr"
