@@ -8,7 +8,7 @@ KERNEL_ARGS_FAST="noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_
 KERNEL_ARGS_LIVE="boot=live forcefsck ignore_uuid live-media-path=/system nopersistence swap=true noeject" 
 KERNEL_ARGS_MISC="console=ttyS0,9600 console=tty1 lockdown"
 KERNEL_ARGS_NORM="panic=5"
-GRUB_MODULES="nativedisk biosdisk pci ata pata scsi ahci usb ehci uhci usbms disk part_gpt fat file configfile search search_fs_file echo ls reboot usb_keyboard at_keyboard minicmd"
+GRUB_MODULES="nativedisk biosdisk pci ata pata scsi ahci usb ehci uhci usbms disk part_gpt fat file configfile search search_fs_file echo ls reboot usb_keyboard at_keyboard minicmd fshelp"
 
 rm -f "$ROOT/$IMAGE"
 fallocate -l 1G "$ROOT/$IMAGE"
