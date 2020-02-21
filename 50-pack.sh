@@ -2,8 +2,7 @@
 set -Eeuo pipefail
 set -x
 
-ROOT=build
-IMAGE=debian.img
+source ./config.sh
 
 cd "$ROOT"
 tar -cvzf "$IMAGE".tar.gz "$IMAGE"

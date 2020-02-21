@@ -2,5 +2,7 @@
 set -Eeuo pipefail
 set -x
 
-rm -rf --one-file-system build
-mkdir -p build
+source ./config.sh
+
+rm -rf --one-file-system "$ROOT"
+mkdir -p "$ROOT"

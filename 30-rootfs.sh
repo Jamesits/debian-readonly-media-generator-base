@@ -2,9 +2,7 @@
 set -Eeuo pipefail
 set -x
 
-ROOT=build
-export LANG=C.UTF-8
-export DEBIAN_FRONTEND=noninteractive
+source ./config.sh
 
 rm -rf --one-file-system "$ROOT"/debinst
 rm -f "$ROOT"/rootfs.squashfs

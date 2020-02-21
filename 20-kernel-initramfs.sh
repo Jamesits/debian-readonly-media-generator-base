@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 set -x
 
-ROOT=build
+source ./config.sh
 
 mkdir -p "$ROOT"/boot
 docker run --rm -i \
