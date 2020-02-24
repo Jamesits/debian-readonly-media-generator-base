@@ -29,6 +29,7 @@ cr apt-get update -y
 cr apt-get install -y --no-install-recommends acpi acpi-support-base acpi-fakekey cpufrequtils
 cr systemctl enable acpid
 cr apt-get install -y --no-install-recommends $ADD_PACKAGES
+cr apt-get install -y --no-install-recommends -t unstable wireguard
 
 # FRRouting
 cr sed -i "s/=no/=yes/g" /etc/frr/daemons
