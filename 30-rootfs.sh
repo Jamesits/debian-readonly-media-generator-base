@@ -30,6 +30,10 @@ cr apt-get install -y --no-install-recommends $APT_OPTIONS acpi acpi-support-bas
 cr apt-get install -y $APT_OPTIONS $ADD_PACKAGES
 cr apt-get install -y $APT_OPTIONS -t unstable $ADD_PACKAGES_UNSTABLE
 
+# kernel modules (srext)
+cr apt-get install -y build-essential git
+cr sh -c "cd /tmp; git clone https://github.com/netgroup/SRv6-net-prog.git; cd SRv6-net-prog/srext; make; make install; cd /tmp; rm -rf SRv6-net-prog"
+
 # install kernel modules but remove the kernel
 cr apt-get install -y --no-install-recommends linux-image-amd64
 rm -rf "$ROOT"/debinst/boot/* "$ROOT"/debinst/vmlinuz{,.old} "$ROOT"/debinst/initrd.img{,.old}
