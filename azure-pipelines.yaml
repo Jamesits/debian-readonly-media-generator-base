@@ -12,7 +12,7 @@ jobs:
   - job: image
     displayName: "build image"
     pool:
-      vmImage: "ubuntu-16.04"
+      vmImage: "ubuntu-latest"
     workspace:
       clean: all
     timeoutInMinutes: 120
