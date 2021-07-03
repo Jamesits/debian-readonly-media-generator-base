@@ -6,4 +6,4 @@ disable shadowsocks-libev.service
 disable snmpd.service
 disable strongswan.service
 disable strongswan-swanctl.service
-
+enable tuned.service

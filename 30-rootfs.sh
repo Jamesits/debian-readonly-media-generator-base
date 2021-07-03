@@ -21,8 +21,7 @@ cr apt-get install -y --no-install-recommends ca-certificates apt-transport-http
 chown -R root:root rootfs_overrides
 cp -rv rootfs_overrides/* "$ROOT"/debinst/
 
-# fix things
-cr passwd -d root
+# apt
 cr apt-get update -y
 
 # packages
@@ -31,7 +30,6 @@ cr apt-get install -y $APT_OPTIONS $ADD_PACKAGES
 cr apt-get install -y $APT_OPTIONS -t unstable $ADD_PACKAGES_UNSTABLE
 
 # kernel modules (srext)
-cr apt-get install -y build-essential git
 cr sh -c "cd /tmp; git clone https://github.com/netgroup/SRv6-net-prog.git; cd SRv6-net-prog/srext; make; make install; cd /tmp; rm -rf SRv6-net-prog"
 
 # install kernel modules but remove the kernel
@@ -53,6 +51,12 @@ rm -rf "$ROOT"/debinst/var/lib/apt/lists/*
 # https://www.humblec.com/running_with_unpopulated_etc/
 # http://0pointer.net/blog/projects/stateless.html
 rm -f "$ROOT"/debinst/etc/machine-id
+rm -f "$ROOT"/debinst/root/.bash_history
+rm -f "$ROOT"/debinst/var/lib/systemd/random-seed
+cr journalctl --rotate
+cr journalctl --vacuum-time=1s
+cr passwd -d root
+cr tuned-adm profile "${TUNED_PROFILE}"
 
 # pack rootfs
 mksquashfs "$ROOT"/debinst "$ROOT"/rootfs.squashfs -comp xz -noappend
