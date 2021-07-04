@@ -24,10 +24,8 @@ cp -rv rootfs_overrides/* "$ROOT"/debinst/
 # apt
 cr apt-get update -y
 
-# install kernel modules but remove the kernel
+# install kernel modules
 cr apt-get install $APT_OPTIONS -t $APT_BACKPORT_RELEASE -y --no-install-recommends linux-image-amd64
-rm -rf "$ROOT"/debinst/boot/* "$ROOT"/debinst/vmlinuz{,.old} "$ROOT"/debinst/initrd.img{,.old}
-
 # install kernel headers
 cr sh -c "dpkg --get-selections | grep -e 'linux-image-[0-9]' | cut -f1 | cut -d'-' -f'3-' | xargs -n1 -I'{}' apt-get install -y $APT_OPTIONS linux-headers-{}"
 
@@ -51,6 +49,9 @@ cr sh -c "dpkg --get-selections | grep -v deinstall" > "$ROOT"/packages.txt
 cr apt-get clean -y
 cr apt-get autoremove -y
 rm -rf "$ROOT"/debinst/var/lib/apt/lists/*
+
+# remove the kernel & initramfs (we won't be using them anyway)
+rm -rf "$ROOT"/debinst/boot/* "$ROOT"/debinst/vmlinuz{,.old} "$ROOT"/debinst/initrd.img{,.old}
 
 # remove machind id to make sure a different one is generated for every instance
 # note: this will trigger systemd's unpopulated /etc code which resets the enable/disable status of all units
