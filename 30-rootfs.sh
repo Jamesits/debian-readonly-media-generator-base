@@ -53,8 +53,9 @@ rm -rf "$ROOT"/debinst/var/lib/apt/lists/*
 rm -f "$ROOT"/debinst/etc/machine-id
 rm -f "$ROOT"/debinst/root/.bash_history
 rm -f "$ROOT"/debinst/var/lib/systemd/random-seed
-cr journalctl --rotate
-cr journalctl --vacuum-time=1s
+# no dbus; not working at all
+# cr journalctl --rotate
+# cr journalctl --vacuum-time=1s
 cr passwd -d root
 cr tuned-adm profile "${TUNED_PROFILE}"
 
