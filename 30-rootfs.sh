@@ -43,6 +43,7 @@ cr apt-get -y -t $APT_BACKPORT_RELEASE $APT_OPTIONS upgrade
 KERNEL_REVISION=$(cr sh -c "dpkg --get-selections | grep -e 'linux-image-[0-9]' | cut -f1 | cut -d'-' -f'3-' | head -n 1")
 echo "KERNEL_REVISION=${KERNEL_REVISION}"
 cr sh -c "cd /tmp; git clone https://github.com/netgroup/SRv6-net-prog.git; cd SRv6-net-prog/srext; make KERNELDIR=/lib/modules/${KERNEL_REVISION}/build; make KERNELDIR=/lib/modules/${KERNEL_REVISION}/build install; cd /tmp; rm -rf SRv6-net-prog"
+cr depmod --all
 
 # generate a list of packages
 cr sh -c "dpkg --get-selections | grep -v deinstall" > "$ROOT"/packages.txt

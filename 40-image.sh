@@ -135,73 +135,97 @@ insmod gzio
 insmod xzio
 insmod lzopio
 
-menuentry "Debian (R/W)" {
+menuentry "Debian (R/W+SecureBoot)" {
     savedefault
 
     search --no-floppy --file --set=root /boot/grub/grub.cfg
     set gfxpayload=keep
     
     echo 'Loading Linux...'
-    linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM $KERNEL_ARGS_PERSISTENT
+    linux /boot/$KERNEL_FILENAME lockdown $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM $KERNEL_ARGS_PERSISTENT
     echo 'Loading initramfs...'
     initrd /boot/$INITRD_FILENAME
     
     boot
 }
 
-menuentry "Debian" {
+menuentry "Debian (R/O+SecureBoot)" {
     savedefault
 
     search --no-floppy --file --set=root /boot/grub/grub.cfg
     set gfxpayload=keep
     
     echo 'Loading Linux...'
-    linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM $KERNEL_ARGS_NOPERSISTENT
+    linux /boot/$KERNEL_FILENAME lockdown $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM $KERNEL_ARGS_NOPERSISTENT
     echo 'Loading initramfs...'
     initrd /boot/$INITRD_FILENAME
     
     boot
 }
 
-menuentry "Debian (load to system memory)" {
-    savedefault
-
+menuentry "Verify File Integrity" {
     search --no-floppy --file --set=root /boot/grub/grub.cfg
     set gfxpayload=keep
     
     echo 'Loading Linux...'
-    linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE toram $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM $KERNEL_ARGS_NOPERSISTENT
+    linux /boot/$KERNEL_FILENAME verify-checksums lockdown $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC
     echo 'Loading initramfs...'
     initrd /boot/$INITRD_FILENAME
     
     boot
 }
 
-menuentry "Debian (single user mode)" {
-    search --no-floppy --file --set=root /boot/grub/grub.cfg
-    set gfxpayload=keep
-    
-    echo 'Loading Linux...'
-    linux /boot/$KERNEL_FILENAME single $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NOPERSISTENT
-    echo 'Loading initramfs...'
-    initrd /boot/$INITRD_FILENAME
-    
-    boot
+submenu 'OS Debugging Options' {
+    menuentry "Debian (R/O+RamDiskRoot)" {
+        search --no-floppy --file --set=root /boot/grub/grub.cfg
+        set gfxpayload=keep
+        
+        echo 'Loading Linux...'
+        linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE toram $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM $KERNEL_ARGS_NOPERSISTENT
+        echo 'Loading initramfs...'
+        initrd /boot/$INITRD_FILENAME
+        
+        boot
+    }
+
+    menuentry "Debian (R/O-SecureBoot)" {
+        search --no-floppy --file --set=root /boot/grub/grub.cfg
+        set gfxpayload=keep
+        
+        echo 'Loading Linux...'
+        linux /boot/$KERNEL_FILENAME $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NORM $KERNEL_ARGS_NOPERSISTENT
+        echo 'Loading initramfs...'
+        initrd /boot/$INITRD_FILENAME
+        
+        boot
+    }
+
+    menuentry "Debian (R/O+SingleUserMode)" {
+        search --no-floppy --file --set=root /boot/grub/grub.cfg
+        set gfxpayload=keep
+        
+        echo 'Loading Linux...'
+        linux /boot/$KERNEL_FILENAME single $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NOPERSISTENT
+        echo 'Loading initramfs...'
+        initrd /boot/$INITRD_FILENAME
+        
+        boot
+    }
+
+    menuentry "Debian (R/O+EarlyShell)" {
+        search --no-floppy --file --set=root /boot/grub/grub.cfg
+        set gfxpayload=keep
+        
+        echo 'Loading Linux...'
+        linux /boot/$KERNEL_FILENAME init=/bin/sh $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC $KERNEL_ARGS_NOPERSISTENT
+        echo 'Loading initramfs...'
+        initrd /boot/$INITRD_FILENAME
+        
+        boot
+    }
 }
 
-menuentry "Verify file integrity" {
-    search --no-floppy --file --set=root /boot/grub/grub.cfg
-    set gfxpayload=keep
-    
-    echo 'Loading Linux...'
-    linux /boot/$KERNEL_FILENAME verify-checksums $KERNEL_ARGS_FAST $KERNEL_ARGS_LIVE $KERNEL_ARGS_MISC
-    echo 'Loading initramfs...'
-    initrd /boot/$INITRD_FILENAME
-    
-    boot
-}
-
-submenu 'Advanced boot' {
+submenu 'Advanced Boot Options' {
     menuentry 'Boot from next partition' {
         insmod chain
         chainloader +1
