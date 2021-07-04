@@ -54,7 +54,7 @@ umount "$ROOT"/userdata
 # Override core.img to insert gpt modules:
 # http://www.dolda2000.com/~fredrik/doc/grub2
 cp -r /usr/lib/grub "$ROOT"/grub
-grub-mkimage -O i386-pc -o "$ROOT"/grub/i386-pc/core.img -c grub/earlyconfig.cfg $GRUB_MODULES
+grub-mkimage -O i386-pc -o "$ROOT"/grub/i386-pc/core.img -c grub/earlyconfig.cfg --prefix "" $GRUB_MODULES
 # we cannot install grub-pc on Ubuntu 16.04 because of a dependency hell so a symlink is missing
 # we have to use the original absolute path
 /usr/lib/grub/i386-pc/grub-bios-setup --force --skip-fs-probe --directory="$ROOT"/grub/i386-pc "$LOOPDEV"
