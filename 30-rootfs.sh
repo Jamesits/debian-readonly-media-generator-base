@@ -24,7 +24,13 @@ cp -rv rootfs_overrides/* "$ROOT"/debinst/
 # apt
 cr apt-get update -y
 
-# packages
+# install kernel modules but remove the kernel
+cr apt-get install $APT_OPTIONS -t $APT_BACKPORT_RELEASE -y --no-install-recommends linux-image-amd64
+rm -rf "$ROOT"/debinst/boot/* "$ROOT"/debinst/vmlinuz{,.old} "$ROOT"/debinst/initrd.img{,.old}
+
+# install kernel headers
+cr sh -c "dpkg --get-selections | grep -e 'linux-image-[0-9]' | cut -f1 | cut -d'-' -f'3-' | xargs -n1 -I'{}' apt-get install -y $APT_OPTIONS linux-headers-{}"
+
 # install required packages
 cr apt-get install -y --no-install-recommends $APT_OPTIONS acpi acpi-support-base acpi-fakekey cpufrequtils
 # install packages from the default release
@@ -33,13 +39,6 @@ cr apt-get install -y $APT_OPTIONS $ADD_PACKAGES
 [ ! -z "$ADD_PACKAGES_UNSTABLE" ] && cr apt-get install -y $APT_OPTIONS -t unstable $ADD_PACKAGES_UNSTABLE
 # upgrade all packages which can be upgraded in the backports release
 cr apt-get -y -t $APT_BACKPORT_RELEASE $APT_OPTIONS upgrade
-
-# install kernel modules but remove the kernel
-cr apt-get install $APT_OPTIONS -t $APT_BACKPORT_RELEASE -y --no-install-recommends linux-image-amd64
-rm -rf "$ROOT"/debinst/boot/* "$ROOT"/debinst/vmlinuz{,.old} "$ROOT"/debinst/initrd.img{,.old}
-
-# install kernel headers
-cr sh -c "dpkg --get-selections | grep -e 'linux-image-[0-9]' | cut -f1 | cut -d'-' -f'3-' | xargs -n1 -I'{}' apt-get install -y $APT_OPTIONS linux-headers-{}"
 
 # kernel modules
 # srext
