@@ -22,9 +22,12 @@ Firmware types:
 Security features:
 - [x] Kernel lockdown mode
 - [ ] Secure Boot
+- [x] Readonly root filesystem (user changes disposable)
 
 Networking features:
-- [x] bird 2
+- [x] iproute2
+- [x] iptables & nftables
+- [x] Bird 2
 - [x] FRRouting
 - [x] Kernel MPLS/L3VPN support
 - [x] Kernel SR-MPLS/SRv6 support + srext module
@@ -33,6 +36,7 @@ Networking features:
 - [x] Wireguard
 - [x] DHCP client
 - [ ] DHCP server
+- [ ] TFTP server
 
 Network Automation Options:
 - [x] Python 3
