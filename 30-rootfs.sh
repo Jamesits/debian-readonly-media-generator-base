@@ -25,11 +25,12 @@ cp -rv rootfs_overrides/* "$ROOT"/debinst/
 cr apt-get update -y
 
 # packages
-# first install the packages from the default release
+# install required packages
 cr apt-get install -y --no-install-recommends $APT_OPTIONS acpi acpi-support-base acpi-fakekey cpufrequtils
+# install packages from the default release
 cr apt-get install -y $APT_OPTIONS $ADD_PACKAGES
-# install the packages from the unstable release
-cr apt-get install -y $APT_OPTIONS -t unstable $ADD_PACKAGES_UNSTABLE
+# install packages from the unstable release
+[ ! -z "$ADD_PACKAGES_UNSTABLE" ] && cr apt-get install -y $APT_OPTIONS -t unstable $ADD_PACKAGES_UNSTABLE
 # upgrade all packages which can be upgraded in the backports release
 cr apt-get -y -t $APT_BACKPORT_RELEASE $APT_OPTIONS upgrade
 
