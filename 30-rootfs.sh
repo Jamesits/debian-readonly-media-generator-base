@@ -38,7 +38,7 @@ cr apt-get install $APT_OPTIONS -t $APT_BACKPORT_RELEASE -y --no-install-recomme
 rm -rf "$ROOT"/debinst/boot/* "$ROOT"/debinst/vmlinuz{,.old} "$ROOT"/debinst/initrd.img{,.old}
 
 # install kernel headers
-cr sh -c "dpkg --get-selections | grep -e 'linux-image-[0-9]' | cut -f1 | cut -d'-' -f'3-' | xargs -n1 -I'{}' apt-get install -y $APT_OPTIONS -t $APT_BACKPORT_RELEASE linux-header-{}"
+cr sh -c "dpkg --get-selections | grep -e 'linux-image-[0-9]' | cut -f1 | cut -d'-' -f'3-' | xargs -n1 -I'{}' apt-get install -y $APT_OPTIONS linux-header-{}"
 
 # kernel modules
 # srext
