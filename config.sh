@@ -16,5 +16,5 @@ GRUB_MODULES="biosdisk disk part_gpt fat file configfile search search_fs_file e
 ADD_PACKAGES="sudo curl wget lynx w3m gnupg2 frr vim mtr-tiny tcpdump bmon htop ssh telnet netcat-openbsd socat nmap zmap hping3 arping arp-scan iperf3 dnsutils traceroute ndisc6 sipcalc charon-systemd libcharon-extra-plugins libstrongswan-extra-plugins tshark openvpn qemu-guest-agent open-vm-tools iptables-persistent shadowsocks-libev snmpd watchdog tuned tuned-utils tuned-utils-systemtap tmux screen byobu software-properties-common nload pciutils chrony resolvconf build-essential git man-db"
 ADD_PACKAGES_UNSTABLE="wireguard bird2"
 APT_OPTIONS="-o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
-APT_DEFAULT_RELEASE="buster-backports"
+APT_BACKPORT_RELEASE="buster-backports"
 TUNED_PROFILE="virtual-guest"

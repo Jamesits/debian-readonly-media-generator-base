@@ -25,17 +25,20 @@ cp -rv rootfs_overrides/* "$ROOT"/debinst/
 cr apt-get update -y
 
 # packages
-cr apt-get -y -t $APT_DEFAULT_RELEASE $APT_OPTIONS upgrade
-cr apt-get install -y --no-install-recommends $APT_OPTIONS -t $APT_DEFAULT_RELEASE acpi acpi-support-base acpi-fakekey cpufrequtils
-cr apt-get install -y $APT_OPTIONS -t $APT_DEFAULT_RELEASE $ADD_PACKAGES
+# first install the packages from the default release
+cr apt-get install -y --no-install-recommends $APT_OPTIONS acpi acpi-support-base acpi-fakekey cpufrequtils
+cr apt-get install -y $APT_OPTIONS $ADD_PACKAGES
+# install the packages from the unstable release
 cr apt-get install -y $APT_OPTIONS -t unstable $ADD_PACKAGES_UNSTABLE
+# upgrade all packages which can be upgraded in the backports release
+cr apt-get -y -t $APT_BACKPORT_RELEASE $APT_OPTIONS upgrade
 
 # install kernel modules but remove the kernel
-cr apt-get install $APT_OPTIONS -t $APT_DEFAULT_RELEASE -y --no-install-recommends linux-image-amd64
+cr apt-get install $APT_OPTIONS -t $APT_BACKPORT_RELEASE -y --no-install-recommends linux-image-amd64
 rm -rf "$ROOT"/debinst/boot/* "$ROOT"/debinst/vmlinuz{,.old} "$ROOT"/debinst/initrd.img{,.old}
 
 # install kernel headers
-cr sh -c "dpkg --get-selections | grep -e 'linux-image-[0-9]' | cut -f1 | cut -d'-' -f'3-' | xargs -n1 -I'{}' apt-get install -y $APT_OPTIONS -t $APT_DEFAULT_RELEASE linux-header-{}"
+cr sh -c "dpkg --get-selections | grep -e 'linux-image-[0-9]' | cut -f1 | cut -d'-' -f'3-' | xargs -n1 -I'{}' apt-get install -y $APT_OPTIONS -t $APT_BACKPORT_RELEASE linux-header-{}"
 
 # kernel modules
 # srext
