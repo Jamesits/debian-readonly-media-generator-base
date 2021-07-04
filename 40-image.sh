@@ -135,7 +135,7 @@ insmod gzio
 insmod xzio
 insmod lzopio
 
-menuentry "Debian (R/W+SecureBoot)" {
+menuentry "Debian (R/W)" {
     savedefault
 
     search --no-floppy --file --set=root /boot/grub/grub.cfg
@@ -149,7 +149,7 @@ menuentry "Debian (R/W+SecureBoot)" {
     boot
 }
 
-menuentry "Debian (R/O+SecureBoot)" {
+menuentry "Debian (R/O)" {
     savedefault
 
     search --no-floppy --file --set=root /boot/grub/grub.cfg
@@ -188,7 +188,7 @@ submenu 'OS Debugging Options' {
         boot
     }
 
-    menuentry "Debian (R/O-SecureBoot)" {
+    menuentry "Debian (R/O-Lockdown)" {
         search --no-floppy --file --set=root /boot/grub/grub.cfg
         set gfxpayload=keep
         
